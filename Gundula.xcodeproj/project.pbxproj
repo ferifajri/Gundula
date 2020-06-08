@@ -13,6 +13,7 @@
 		57FEAE09248DD2E100DD4059 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 57FEAE07248DD2E100DD4059 /* Main.storyboard */; };
 		57FEAE0B248DD2E300DD4059 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 57FEAE0A248DD2E300DD4059 /* Assets.xcassets */; };
 		57FEAE0E248DD2E300DD4059 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 57FEAE0C248DD2E300DD4059 /* LaunchScreen.storyboard */; };
+		57FEAE18248DDF5500DD4059 /* GunduField.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 57FEAE17248DDF5500DD4059 /* GunduField.scnassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		57FEAE0A248DD2E300DD4059 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		57FEAE0D248DD2E300DD4059 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		57FEAE0F248DD2E300DD4059 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		57FEAE17248DDF5500DD4059 /* GunduField.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = GunduField.scnassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +65,7 @@
 				57FEAE0A248DD2E300DD4059 /* Assets.xcassets */,
 				57FEAE0C248DD2E300DD4059 /* LaunchScreen.storyboard */,
 				57FEAE0F248DD2E300DD4059 /* Info.plist */,
+				57FEAE17248DDF5500DD4059 /* GunduField.scnassets */,
 			);
 			path = Gundula;
 			sourceTree = "<group>";
@@ -128,6 +131,7 @@
 				57FEAE0E248DD2E300DD4059 /* LaunchScreen.storyboard in Resources */,
 				57FEAE0B248DD2E300DD4059 /* Assets.xcassets in Resources */,
 				57FEAE09248DD2E100DD4059 /* Main.storyboard in Resources */,
+				57FEAE18248DDF5500DD4059 /* GunduField.scnassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
