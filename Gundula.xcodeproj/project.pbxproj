@@ -14,6 +14,8 @@
 		57FEAE0B248DD2E300DD4059 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 57FEAE0A248DD2E300DD4059 /* Assets.xcassets */; };
 		57FEAE0E248DD2E300DD4059 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 57FEAE0C248DD2E300DD4059 /* LaunchScreen.storyboard */; };
 		57FEAE18248DDF5500DD4059 /* GunduField.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 57FEAE17248DDF5500DD4059 /* GunduField.scnassets */; };
+		57FEAE5E2490C43200DD4059 /* ManualCreateFunduField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57FEAE5D2490C43200DD4059 /* ManualCreateFunduField.swift */; };
+		57FEAE602490C71100DD4059 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 57FEAE5F2490C71100DD4059 /* art.scnassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +28,8 @@
 		57FEAE0D248DD2E300DD4059 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		57FEAE0F248DD2E300DD4059 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		57FEAE17248DDF5500DD4059 /* GunduField.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = GunduField.scnassets; sourceTree = "<group>"; };
+		57FEAE5D2490C43200DD4059 /* ManualCreateFunduField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualCreateFunduField.swift; sourceTree = "<group>"; };
+		57FEAE5F2490C71100DD4059 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +70,8 @@
 				57FEAE0C248DD2E300DD4059 /* LaunchScreen.storyboard */,
 				57FEAE0F248DD2E300DD4059 /* Info.plist */,
 				57FEAE17248DDF5500DD4059 /* GunduField.scnassets */,
+				57FEAE5D2490C43200DD4059 /* ManualCreateFunduField.swift */,
+				57FEAE5F2490C71100DD4059 /* art.scnassets */,
 			);
 			path = Gundula;
 			sourceTree = "<group>";
@@ -130,6 +136,7 @@
 			files = (
 				57FEAE0E248DD2E300DD4059 /* LaunchScreen.storyboard in Resources */,
 				57FEAE0B248DD2E300DD4059 /* Assets.xcassets in Resources */,
+				57FEAE602490C71100DD4059 /* art.scnassets in Resources */,
 				57FEAE09248DD2E100DD4059 /* Main.storyboard in Resources */,
 				57FEAE18248DDF5500DD4059 /* GunduField.scnassets in Resources */,
 			);
@@ -145,6 +152,7 @@
 				57FEAE06248DD2E100DD4059 /* ViewController.swift in Sources */,
 				57FEAE02248DD2E100DD4059 /* AppDelegate.swift in Sources */,
 				57FEAE04248DD2E100DD4059 /* SceneDelegate.swift in Sources */,
+				57FEAE5E2490C43200DD4059 /* ManualCreateFunduField.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
