@@ -22,9 +22,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 
     
     // Config Element is added ?
-    let arrow = SCNScene(named: "art.scnassets/arrow.scn")!.rootNode
-    let GunduFieldNodeDisable = SCNScene(named: "GunduField.scnassets/GunduFieldDisable.scn")!.rootNode
-    let GunduFieldNode = SCNScene(named: "GunduField.scnassets/GunduField.scn")!.rootNode
+    let PlaneDetectTrue = SCNScene(named: "art.scnassets/planedetecttrue.scn")!.rootNode
+    let GunduFieldNodeDisable = SCNScene(named: "GunduField.scnassets/NewGunduFieldDisable.scn")!.rootNode
+    let GunduFieldNode = SCNScene(named: "GunduField.scnassets/NewGunduField.scn")!.rootNode
     let PressPlayNode = SCNScene(named: "GunduField.scnassets/PressPlay.scn")!.rootNode
     
     var isGameOn:Bool = false
@@ -75,7 +75,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         self.sceneView.delegate = self
         center = view.center
         
-        sceneView.scene.rootNode.addChildNode(self.arrow)
+        sceneView.scene.rootNode.addChildNode(self.PlaneDetectTrue)
         
     }
     
@@ -85,16 +85,16 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         if (!isGameOn && self.isGunduFieldAdded == false) {
             //place GameNode
             //guard let angle = sceneView.session.currentFrame?.camera.eulerAngles.y else {return}
-            self.GunduFieldNodeDisable.position = self.arrow.position
+            self.GunduFieldNodeDisable.position = self.PlaneDetectTrue.position
             //GunduFieldNodeDisable.eulerAngles.y = angle
             isGameOn = true
             
             self.GunduFieldNodeDisable.pivot = SCNMatrix4MakeTranslation(0,0,0)
             self.sceneView.scene.rootNode.addChildNode(self.GunduFieldNodeDisable)
             
-            PressPlayNode.position = SCNVector3(-0.75,3,0)
+            PressPlayNode.position = SCNVector3(-0.75,0.5,0)
             GunduFieldNodeDisable.addChildNode(self.PressPlayNode)
-            arrow.removeFromParentNode()
+            PlaneDetectTrue.removeFromParentNode()
             
             let tapFieldGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTapField(sender:)))
             self.sceneView.addGestureRecognizer(tapFieldGestureRecognizer)
@@ -103,12 +103,14 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             self.sceneView.addGestureRecognizer(resizeFieldGestureRecognizer)
             //print(self.gunduFieldAdded)
             
+            self.addSasaran()
+            
         }
         else if (isGameOn == true && self.isGunduFieldAdded == true) {
             //print("add gacoan")
             if self.isGacoanAdded == false {
                 self.addGacoan()
-                self.addSasaran()
+//                self.addSasaran()
                 }
             else {
                 
@@ -217,19 +219,28 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             
         if result.node.name == "gacoan" {
 //            using tapHold as force
+//            let gacoan = result.node
+//            guard let pointOfView = self.sceneView.pointOfView else {return}
+//            let transform = pointOfView.transform
+//            let orientation = SCNVector3(-transform.m31,-transform.m32, -transform.m33)
+//            let location = SCNVector3(transform.m41,transform.m42,transform.m43)
+//
+//            let endPoint = touch!.location(in: view)
+//            //Calculate your vector from the delta and what not here
+//            let direction = CGVector(dx: endPoint.x - startPoint!.x, dy: endPoint.y - startPoint!.y)
+//
+//            let body = SCNPhysicsBody(type: .dynamic, shape: SCNPhysicsShape(node: gacoan))
+//            gacoan.physicsBody = body
+//            gacoan.physicsBody?.applyForce(SCNVector3(orientation.x*power, 0, 2*power), asImpulse: true)
+            
             let gacoan = result.node
-            guard let pointOfView = self.sceneView.pointOfView else {return}
-            let transform = pointOfView.transform
-            let orientation = SCNVector3(-transform.m31,-transform.m32, -transform.m33)
+            let (direction, position) = self.getUserVector()
+            gacoan.position = position
+            var nodeDirection = SCNVector3()
+            nodeDirection = SCNVector3(direction.x*2,0,direction.z*2)
+            gacoan.physicsBody?.applyForce(nodeDirection, at: SCNVector3(0.1,0,0), asImpulse: true)
+            gacoan.physicsBody?.applyForce(nodeDirection , asImpulse: true)
             
-            
-            let endPoint = touch!.location(in: view)
-            //Calculate your vector from the delta and what not here
-            let direction = CGVector(dx: endPoint.x - startPoint!.x, dy: endPoint.y - startPoint!.y)
-            
-            let body = SCNPhysicsBody(type: .dynamic, shape: SCNPhysicsShape(node: gacoan))
-            gacoan.physicsBody = body
-            gacoan.physicsBody?.applyForce(SCNVector3(orientation.x*power, orientation.y*power,orientation.z*power), asImpulse: true)
 
 
             //using swipegesture as force orientation
@@ -248,6 +259,21 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }
             
             }
+    }
+    
+    
+    //MARK: - maths
+    func getUserVector() -> (SCNVector3, SCNVector3) { // (direction, position)
+        if let frame = self.sceneView.session.currentFrame {
+            // 4x4  transform matrix describing camera in world space
+            let mat = SCNMatrix4(frame.camera.transform)
+            // orientation of camera in world space
+            let dir = SCNVector3(-1 * mat.m31, -1 * mat.m32, -1 * mat.m33)
+            // location of camera in world space
+            let pos = SCNVector3(mat.m41, mat.m42, mat.m43)
+            return (dir, pos)
+        }
+        return (SCNVector3(0, 0, -1), SCNVector3(0, 0, -0.2))
     }
     
     func throwBall() {
@@ -381,7 +407,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             guard let transform = result?.worldTransform else {return}
             let thirdColumn = transform.columns.3
             let position = SCNVector3Make(thirdColumn.x, thirdColumn.y, thirdColumn.z)
-            self.arrow.position = position
+            self.PlaneDetectTrue.position = position
             }
     }
 
@@ -417,7 +443,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         //gacoan.geometry?.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "gacoan-1")
         gacoan.position = position
 //        gacoan.simdScale = SIMD3(1*scaleRatio, 1*scaleRatio, 1*scaleRatio)
-        gacoan.simdScale = SIMD3(1*self.scaleRatio, 1*self.scaleRatio, 1*self.scaleRatio)
+       // gacoan.simdScale = SIMD3(1*self.scaleRatio, 1*self.scaleRatio, 1*self.scaleRatio)
             
         //print(Int(self.gunduFieldHeight))
         
@@ -438,18 +464,18 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
         func addSasaran() {
-            for _ in 1...6 {
+            for i in 0...2 {
                 let sasaran = Sasaran()
-                let x = Double.random(in: -0.3...0.5)
-                let z = Double.random(in: -0.3...0.5)
-                sasaran.position = SCNVector3(x, 0, z)
+//                let x = Double.random(in: -0.3...0.5)
+//                let z = Double.random(in: -0.3...0.5)
+//                sasaran.position = SCNVector3(x, 0, z)
                 
-//                let x = [0,0,0,0.3,0.3,0.3]
-//                let z = [0,-0.3,0.3,0,-0.3,0.3]
-//                sasaranNode.position = SCNVector3(x[i], 0, z[i])
-                sasaran.simdScale = SIMD3(1*self.scaleRatio, 1*self.scaleRatio, 1*self.scaleRatio)
+                let x = [0,0,0,0.3,0.3,0.3]
+                let z = [0,-0.3,0.3,0,-0.3,0.3]
+                sasaran.position = SCNVector3(x[i], 0, z[i])
+                //sasaran.simdScale = SIMD3(1*self.scaleRatio, 1*self.scaleRatio, 1*self.scaleRatio)
     //            // Add command code here into Donut()
-                sasaran.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
+                sasaran.physicsBody = SCNPhysicsBody(type: .static, shape: nil)
                 sasaran.physicsBody?.isAffectedByGravity = true
     //            // Add Collision
     //            donutNode.physicsBody?.categoryBitMask = GamePhysicsBitmask.donut
