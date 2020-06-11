@@ -6,4 +6,20 @@
 //  Copyright © 2020 Feri Fajri. All rights reserved.
 //
 
-import Foundation
+import UIKit
+import ARKit
+
+class WelcomeController: UIViewController, ARSKViewDelegate {
+    
+    @IBOutlet weak var sceneView: ARSKView!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.sceneView.delegate = self
+        
+        
+        // Do any additional setup after loading the view.
+    }
+    
+}
+
