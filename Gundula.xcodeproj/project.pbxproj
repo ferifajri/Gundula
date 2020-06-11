@@ -16,6 +16,9 @@
 		57FEAE18248DDF5500DD4059 /* GunduField.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 57FEAE17248DDF5500DD4059 /* GunduField.scnassets */; };
 		57FEAE5E2490C43200DD4059 /* ManualCreateFunduField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57FEAE5D2490C43200DD4059 /* ManualCreateFunduField.swift */; };
 		57FEAE602490C71100DD4059 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 57FEAE5F2490C71100DD4059 /* art.scnassets */; };
+		57FEAE6224914BA900DD4059 /* GamePhysicsBitmask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57FEAE6124914BA900DD4059 /* GamePhysicsBitmask.swift */; };
+		57FEAE642491567400DD4059 /* Gacoan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57FEAE632491567400DD4059 /* Gacoan.swift */; };
+		57FEAE6624917FAF00DD4059 /* Sasaran.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57FEAE6524917FAF00DD4059 /* Sasaran.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +33,9 @@
 		57FEAE17248DDF5500DD4059 /* GunduField.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = GunduField.scnassets; sourceTree = "<group>"; };
 		57FEAE5D2490C43200DD4059 /* ManualCreateFunduField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualCreateFunduField.swift; sourceTree = "<group>"; };
 		57FEAE5F2490C71100DD4059 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
+		57FEAE6124914BA900DD4059 /* GamePhysicsBitmask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamePhysicsBitmask.swift; sourceTree = "<group>"; };
+		57FEAE632491567400DD4059 /* Gacoan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gacoan.swift; sourceTree = "<group>"; };
+		57FEAE6524917FAF00DD4059 /* Sasaran.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sasaran.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +78,9 @@
 				57FEAE17248DDF5500DD4059 /* GunduField.scnassets */,
 				57FEAE5D2490C43200DD4059 /* ManualCreateFunduField.swift */,
 				57FEAE5F2490C71100DD4059 /* art.scnassets */,
+				57FEAE6124914BA900DD4059 /* GamePhysicsBitmask.swift */,
+				57FEAE632491567400DD4059 /* Gacoan.swift */,
+				57FEAE6524917FAF00DD4059 /* Sasaran.swift */,
 			);
 			path = Gundula;
 			sourceTree = "<group>";
@@ -149,8 +158,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				57FEAE642491567400DD4059 /* Gacoan.swift in Sources */,
 				57FEAE06248DD2E100DD4059 /* ViewController.swift in Sources */,
+				57FEAE6224914BA900DD4059 /* GamePhysicsBitmask.swift in Sources */,
 				57FEAE02248DD2E100DD4059 /* AppDelegate.swift in Sources */,
+				57FEAE6624917FAF00DD4059 /* Sasaran.swift in Sources */,
 				57FEAE04248DD2E100DD4059 /* SceneDelegate.swift in Sources */,
 				57FEAE5E2490C43200DD4059 /* ManualCreateFunduField.swift in Sources */,
 			);

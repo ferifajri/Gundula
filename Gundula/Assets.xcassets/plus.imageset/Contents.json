@@ -1,15 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "sasaran-1.png",
+      "filename" : "ic_add.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "ic_add_2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "ic_add_3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

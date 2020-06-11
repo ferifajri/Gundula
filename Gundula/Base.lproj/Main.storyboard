@@ -24,10 +24,16 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ay6-ON-XhK">
+                                <rect key="frame" x="195" y="436" width="24" height="24"/>
+                                <state key="normal" backgroundImage="plus"/>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="3TM-cW-2yV" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="3Tl-Re-4D9"/>
+                            <constraint firstItem="Ay6-ON-XhK" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="7zW-kq-b5N"/>
+                            <constraint firstItem="Ay6-ON-XhK" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="AZz-8L-2lS"/>
                             <constraint firstAttribute="bottom" secondItem="kdQ-p2-7Rf" secondAttribute="bottom" id="R22-rz-4TD"/>
                             <constraint firstItem="3TM-cW-2yV" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="40" id="SbK-S1-5Ff"/>
                             <constraint firstItem="kdQ-p2-7Rf" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="hIr-Ox-aI5"/>
@@ -46,4 +52,7 @@
             <point key="canvasLocation" x="131.8840579710145" y="137.94642857142856"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="plus" width="24" height="24"/>
+    </resources>
 </document>
