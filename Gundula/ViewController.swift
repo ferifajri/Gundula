@@ -38,6 +38,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var isGunduFieldAdded:Bool = false
     var isGunduFieldNodeDisableAdded:Bool = false
     var isGacoanAdded:Bool = false
+    var isInsideCircle:Bool = false
     
     var planeIsTouched:Bool = false
     
@@ -80,6 +81,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         
         
+        
+        
 
         
     }
@@ -104,7 +107,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             let circle = SCNNode(geometry: circlePlane)
             circle.eulerAngles = SCNVector3(-90.degreestoRadians,0,0)
             circle.position = SCNVector3(0,0,0)
-            circle.opacity = 1
+//            circle.opacity = 1
             self.GunduFieldNodeDisable.addChildNode(circle)
                     
             PressPlayNode.position = SCNVector3(0,0.5,0)
@@ -176,6 +179,82 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     //MARK: - Function
     
+    func getUserVector() -> (SCNVector3, SCNVector3) { // (direction, position)
+        if let frame = self.sceneView.session.currentFrame {
+            // 4x4  transform matrix describing camera in world space
+            let mat = SCNMatrix4(frame.camera.transform)
+            // orientation of camera in world space
+            let dir = SCNVector3(-1 * mat.m31, -1 * mat.m32, -1 * mat.m33)
+            // location of camera in world space
+            let pos = SCNVector3(mat.m41, mat.m42, mat.m43)
+            return (dir, pos)
+        }
+        return (SCNVector3(0, 0, -1), SCNVector3(0, 0, -0.2))
+    }
+    
+    func InsideCircle() {
+        if (
+        (abs(self.GunduFieldNode.position.x) - abs(self.gacoan.position.x) > 0 ) && (abs(self.GunduFieldNode.position.z) - abs(self.gacoan.position.z) > 0 ) ) {
+            isInsideCircle = true
+        } else {
+            isInsideCircle = false
+        }
+    }
+    
+    func PlayGame() {
+        if (isGameOn && self.isGunduFieldAdded == true && isInsideCircle == false ) {
+//            print("Mulai Game")
+
+//            self.sceneView.scene.rootNode.addChildNode(gacoan)
+//
+//            let frame = self.sceneView.session.currentFrame
+//            //            let mat = SCNMatrix4.init(frame!.camera.transform)
+//            var translation = matrix_identity_float4x4
+//            translation.columns.3.z = -0.3
+//            //translation.columns.3.y = self.GunduFieldNode.position.y
+//            self.gacoan.simdTransform = matrix_multiply(translation, (frame?.camera.transform)!)
+            //self.gacoan.position.y = self.GunduFieldNode.position.y
+            
+//            /// Simpen ini
+//            var translation = matrix_identity_float4x4
+//            translation.columns.3 = simd_float4(0, GunduFieldNode.position.y, 0, 1)      // x, y, z, HC
+//            gacoan.simdTransform = matrix_multiply(translation, camera.transform)
+            
+            
+            /// Pakai point of View
+            
+            guard let pointOfView = self.sceneView.pointOfView else {return}
+            let transform = pointOfView.transform
+            let location = SCNVector3(transform.m41, transform.m42, transform.m43)
+            let orientation = SCNVector3(-transform.m31, -transform.m32, -transform.m33)
+            let position = location + orientation
+//            //  gacoan.makeUpdateCameraPos(towards: position)
+//            let action = SCNAction.move(to: SCNVector3(position.x,GunduFieldNode.position.y,position.y), duration: 0.0)
+//
+//
+            self.sceneView.scene.rootNode.addChildNode(gacoan)
+            gacoan.position = SCNVector3(position.x,GunduFieldNode.position.y,position.z)
+//            gacoan.runAction(action)
+            
+            
+            print(GunduFieldNode.position)
+            print(gacoan.position) // kiri kanan pakai x,, atas bawah pakai y
+            
+            
+            
+            //print(location)
+            //print(gacoan.position)
+            
+////            gacoan.runAction(SCNAction.repeatForever(action))
+//            self.sceneView.scene.rootNode.addChildNode(gacoan)
+//            var translation = matrix_identity_float4x4
+//            translation.columns.3.z = -0.1 // Translate 10 cm in front of the camera
+//            gacoan.simdTransform = matrix_multiply(camera.transform, translation)
+            
+        }
+        }
+    
+    
     func addSasaran() {
                 for i in 0...1 {
                     let sasaran = Sasaran()
@@ -185,7 +264,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                     
                     let x = [0,0,0.4,0.4,0.4]
                     let z = [-0.4,0.4,0,-0.4,0.4]
-                    sasaran.position = SCNVector3(x[i], 0.001, z[i])
+                    sasaran.position = SCNVector3(x[i], 0, z[i])
                     //sasaran.simdScale = SIMD3(1*self.scaleRatio, 1*self.scaleRatio, 1*self.scaleRatio)
         //            // Add command code here into Donut()
                     //sasaran.physicsBody = SCNPhysicsBody(type: .static, shape: nil)
@@ -218,8 +297,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 self.sceneView.scene.rootNode.addChildNode(self.PlaneDetectTrue)
 
                 }
-            else if isGameOn {
-    
+            else if isGameOn  {
+//                print(isGameOn)
+                PlayGame()
 //                let hitTestResult = sceneView.hitTest(center, types: .existingPlaneUsingExtent).filter { (result) -> Bool in
 //                                    return (result.anchor as? ARPlaneAnchor)?.alignment == ARPlaneAnchor.Alignment.horizontal
 //                                }.last
