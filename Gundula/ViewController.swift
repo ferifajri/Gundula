@@ -23,9 +23,13 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     // Config Element is added ?
     let PlaneDetectTrue = SCNScene(named: "art.scnassets/planedetecttrue.scn")!.rootNode
+    let gacoan = SCNScene(named: "art.scnassets/gacoan.scn")!.rootNode
     let GunduFieldNodeDisable = SCNScene(named: "GunduField.scnassets/NewGunduFieldDisable.scn")!.rootNode
     let GunduFieldNode = SCNScene(named: "GunduField.scnassets/NewGunduField.scn")!.rootNode
     let PressPlayNode = SCNScene(named: "GunduField.scnassets/PressPlay.scn")!.rootNode
+    
+//    let camera = SCNCamera()
+//    camera = SCNNode(geometry: ARCamera)
     
     var isGameOn:Bool = false
     var isGunduFieldAdded:Bool = false
@@ -76,6 +80,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         center = view.center
         
         sceneView.scene.rootNode.addChildNode(self.PlaneDetectTrue)
+        sceneView.scene.rootNode.addChildNode(self.gacoan)
+//        sceneView.scene.rootNode.addChildNode(self.camera)
         
     }
     
@@ -87,13 +93,15 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             //guard let angle = sceneView.session.currentFrame?.camera.eulerAngles.y else {return}
             self.GunduFieldNodeDisable.position = self.PlaneDetectTrue.position
             //GunduFieldNodeDisable.eulerAngles.y = angle
-            isGameOn = true
+//            isGameOn = true
             
             self.GunduFieldNodeDisable.pivot = SCNMatrix4MakeTranslation(0,0,0)
             self.sceneView.scene.rootNode.addChildNode(self.GunduFieldNodeDisable)
             
-            PressPlayNode.position = SCNVector3(-0.75,0.5,0)
+            PressPlayNode.position = SCNVector3(0,0.5,0)
             GunduFieldNodeDisable.addChildNode(self.PressPlayNode)
+//            let rotateAction = SCNAction.rotateBy(x: 0, y: CGFloat(GLKMathDegreesToRadians(360)), z: 0 , duration: 3)
+//            PressPlayNode.runAction(SCNAction.repeatForever(rotateAction))
             PlaneDetectTrue.removeFromParentNode()
             
             let tapFieldGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTapField(sender:)))
@@ -101,7 +109,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             
             let resizeFieldGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(handlePinchResizeField(sender:)))
             self.sceneView.addGestureRecognizer(resizeFieldGestureRecognizer)
-            //print(self.gunduFieldAdded)
+
             
             self.addSasaran()
             
@@ -344,7 +352,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             guard let hitTestResult = hitTestResult.first else { return }
             if ((hitTestResult.node.name?.isEmpty) == nil) {
             }
-            else if (hitTestResult.node.name == "Play") {
+            else if (hitTestResult.node.name == "kiri" || hitTestResult.node.name == "kanan") {
                 self.GunduFieldNode.position = self.GunduFieldNodeDisable.position
                 self.GunduFieldNode.scale = self.GunduFieldNodeDisable.scale
                 self.GunduFieldNodeDisable.removeFromParentNode()
@@ -402,6 +410,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
         if !isGameOn {
+            print(isGameOn)
             let hitTestResult = sceneView.hitTest(center, types: .estimatedHorizontalPlane)
             let result = hitTestResult.last
             guard let transform = result?.worldTransform else {return}
@@ -409,6 +418,37 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             let position = SCNVector3Make(thirdColumn.x, thirdColumn.y, thirdColumn.z)
             self.PlaneDetectTrue.position = position
             }
+        else if self.isGunduFieldAdded == true {
+            
+            print(isGameOn)
+//            let hitTestResult = sceneView.hitTest(center, types: .estimatedHorizontalPlane)
+//            let frame = self.sceneView.session.currentFrame
+//            let mat = SCNMatrix4.init(frame!.camera.transform)
+//            let location = SCNVector3(mat.m41, mat.m42, mat.m43 + 0.5);
+//            let orientation = SCNVector3(-1*mat.m31, -1*mat.m32, -1*mat.m33)
+////            print(mat)
+//             let position = location + orientation
+            
+
+            
+            
+            //print(self.gacoan.position)
+//            var translation = matrix_identity_float4x4
+//            translation.columns.3.z = -1
+//            self.gacoan.simdTransform = matrix_multiply((frame?.camera.transform)!, translation)
+            
+            
+            //guard let pointOfView = self.sceneView.pointOfView else {return}
+//            let transform = pointOfView.transform
+//            let location = SCNVector3(transform.m41, transform.m42, transform.m43)
+//            let orientation = SCNVector3(-transform.m31,-transform.m32, -transform.m33)
+           self.gacoan.position = SCNVector3(0,0,0)
+//            let result = hitTestResult.last
+//            guard let transform = result?.worldTransform else {return}
+//            let thirdColumn = transform.columns.3
+//            let position = SCNVector3Make(thirdColumn.x, thirdColumn.y, thirdColumn.z)
+//            self.gacoan.position = position
+        }
     }
 
     func getAveragePosition(from positions : ArraySlice<SCNVector3>) -> SCNVector3 {
