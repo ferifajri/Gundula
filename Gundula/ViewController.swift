@@ -171,10 +171,12 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         if isGameOn  && self.isGunduFieldAdded == true && self.isGacoanAdded == true {
             // using long Tap as Force
             
+//            if startTouchTime == nil { return }
             endTouchTime = Date().timeIntervalSince1970
-            let timeDifference = endTouchTime - startTouchTime
+//            let timeDifference = endTouchTime - startTouchTime
             //let velocityComponent = Float(min(max(1 - timeDifference, 0.1), 1.0))
             
+            if startTime == nil { return }
             let difference = Float(Date().timeIntervalSince(startTime!))
             self.power = self.power + difference
 
