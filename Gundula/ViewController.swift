@@ -9,6 +9,7 @@
 import UIKit
 import ARKit
 //import RealityKit
+import CoreMotion
 
 
 class ViewController: UIViewController, ARSCNViewDelegate {
@@ -70,7 +71,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
       return node
     }()
     
-    
+    // Core Motion Setting
+    private var _motionManager = CMMotionManager()
+    private var _startAttitude: CMAttitude?
+    private var _currentAttitude: CMAttitude?
 
     
     override func viewDidLoad() {
@@ -103,12 +107,21 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             let circlePlane = SCNPlane(width: 1, height: 1)
             circlePlane.cornerRadius = 1
             circlePlane.firstMaterial?.diffuse.contents = UIColor.lightGray
-            
+
             let circle = SCNNode(geometry: circlePlane)
-            circle.eulerAngles = SCNVector3(-90.degreestoRadians,0,0)
+            circle.eulerAngles = SCNVector3(Float(-90.0).degreestoRadians,0,0)
             circle.position = SCNVector3(0,0,0)
 //            circle.opacity = 1
             self.GunduFieldNodeDisable.addChildNode(circle)
+            
+            let torusShape = SCNTorus(ringRadius: 0.5, pipeRadius: 0.01)
+            //circlePlane.cornerRadius = 1
+            torusShape.firstMaterial?.diffuse.contents = UIColor.white
+            let torus = SCNNode(geometry: torusShape)
+            //torus.eulerAngles = SCNVector3(Float(-90.0).degreestoRadians,0,0)
+            torus.position = SCNVector3(0,0,0)
+            torus.opacity = 0.8
+            self.GunduFieldNodeDisable.addChildNode(torus)
                     
             PressPlayNode.position = SCNVector3(0,0.5,0)
             GunduFieldNodeDisable.addChildNode(self.PressPlayNode)
@@ -130,6 +143,103 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                     self.addSasaran()
                     
                 }
+        else if (isGameOn && self.isGunduFieldAdded == true && self.isGacoanAdded == false) {
+            self.addGacoan()
+            }
+        else if (isGameOn && self.isGunduFieldAdded == true && self.isGacoanAdded == true) {
+            
+            
+            
+            
+            // using long Tap as Force
+            startTime = Date()
+            startTouchTime = Date().timeIntervalSince1970
+                
+            guard touches.count == 1 else {
+                return
+            }
+            if let startTouch = touches.first {
+                startPoint = startTouch.location(in: view)
+                touchTime = NSDate()
+            }
+            
+        }
+    }
+        
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if isGameOn  && self.isGunduFieldAdded == true && self.isGacoanAdded == true {
+            // using long Tap as Force
+            
+            endTouchTime = Date().timeIntervalSince1970
+            let timeDifference = endTouchTime - startTouchTime
+            //let velocityComponent = Float(min(max(1 - timeDifference, 0.1), 1.0))
+            
+            let difference = Float(Date().timeIntervalSince(startTime!))
+            self.power = self.power + difference
+
+            let touch = touches.first
+            if(touch?.view == self.sceneView){
+                let viewTouchLocation:CGPoint = touch!.location(in: sceneView)
+                guard let result = sceneView.hitTest(viewTouchLocation, options: nil).first else {return}
+                if result.node.name == "gacoan" {
+                    let gacoan = result.node
+                    guard let currentFrame = self.sceneView.session.currentFrame else {
+                        return
+                    }
+//                    var translation = matrix_identity_float4x4
+//                    translation.columns.3.z = -0.01
+                    //let force = 2 * 0.004
+//                    let direction = gacoan.worldFront + SCNVector3(0, 0, -force)
+//                    print(currentFrame.camera.transform)
+//                    print(direction)
+//                    gacoan.simdTransform = matrix_multiply(currentFrame.camera.transform, translation)
+//                    gacoan.physicsBody?.applyForce(gacoan.simdTransform, asImpulse: true)
+                    
+                    let original = SCNVector3(x: 0, y: 0, z: -2)
+                    let force = simd_make_float4(original.x, original.y, original.z, 0)
+                    let rotatedForce = simd_mul(currentFrame.camera.transform, force)
+
+                    let vectorForce = SCNVector3(x:rotatedForce.x, y:rotatedForce.y, z:rotatedForce.z)
+                    gacoan.physicsBody?.applyForce(vectorForce, asImpulse: true)
+                    
+                    print(target)
+                    print(rotatedForce)
+                    
+//                    let (direction, position) = self.getUserVector()
+//                    //gacoan.position = position
+//                    var nodeDirection = SCNVector3()
+//                    nodeDirection = SCNVector3(direction.x,0,direction.z)
+//                    gacoan.physicsBody?.applyForce(nodeDirection, asImpulse: true)
+////                    //gacoan.physicsBody?.applyForce(nodeDirection , asImpulse: true)
+                    
+//                    ////
+//                    guard let poV = self.sceneView.pointOfView else {return}
+//                    let transform = poV.transform
+//                    let orientation = SCNVector3Make(-1*transform.m31,-1*transform.m32, -1*transform.m33)
+//                    let sphere = SCNSphere(radius: 0.04)
+//                    let sphereNode = SCNNode(geometry: sphere)
+//                    sphere.firstMaterial?.diffuse.contents = UIColor.red
+//                    sphereNode.opacity = 0.5
+//                    sphereNode.position = SCNVector3(orientation.x, 0, 0)
+//                    gacoan.addChildNode(sphereNode)
+                    
+                    }
+            }
+            
+            /// Tes using camera orientation
+            
+//            let transform = (sceneView.session.currentFrame?.camera.transform)!
+//            var translation_matrix = matrix_identity_float4x4
+//            //            let cameraRelativePosition = SCNVector3(0,0,-0.1)
+//                        //let cameraRelativePosition = self.GunduFieldNode.position
+//                        //translation_matrix.columns.3.x = cameraRelativePosition.x
+//                        //translation_matrix.columns.3.y = simd_float4(
+//            translation_matrix.columns.3.z = -0.1
+
+        }
+        
+        
     }
     
     //MARK: - Gesture Handler
@@ -144,9 +254,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             guard let hitTestResult = hitTestResult.first else { return }
             if ((hitTestResult.node.name?.isEmpty) == nil) {
             }
-            else if (isGunduFieldNodeDisableAdded == true && (hitTestResult.node.name == "kiri" || hitTestResult.node.name == "kanan")) {
+            else if (isGunduFieldNodeDisableAdded == true && (hitTestResult.node.name == "kiri" || hitTestResult.node.name == "kanan" || hitTestResult.node.name == "PlayText")) {
                 self.GunduFieldNode.position = self.GunduFieldNodeDisable.position
-                self.GunduFieldNode.scale = self.GunduFieldNodeDisable.scale
+                //self.GunduFieldNode.scale = self.GunduFieldNodeDisable.scale
                 self.GunduFieldNodeDisable.removeFromParentNode()
                 
                 //Add Collision
@@ -156,13 +266,22 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 
                 self.sceneView.scene.rootNode.addChildNode(self.GunduFieldNode)
                 
-                let circlePlane = SCNPlane(width: 1, height: 1)
-                circlePlane.cornerRadius = 1
-                circlePlane.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "grass2")
-                let circle = SCNNode(geometry: circlePlane)
-                circle.eulerAngles = SCNVector3(-90.degreestoRadians,0,0)
-                circle.position = SCNVector3(0,0,0)
-                self.GunduFieldNode.addChildNode(circle)
+//                let circlePlane = SCNPlane(width: 1, height: 1)
+//                circlePlane.cornerRadius = 1
+//                circlePlane.firstMaterial?.diffuse.contents = UIColor.lightGray
+//                let circle = SCNNode(geometry: circlePlane)
+//                circle.eulerAngles = SCNVector3(Float(-90.0).degreestoRadians,0,0)
+//                circle.position = SCNVector3(0,0,0)
+//                self.GunduFieldNode.addChildNode(circle)
+                
+                let torusShape = SCNTorus(ringRadius: 0.5, pipeRadius: 0.01)
+                //circlePlane.cornerRadius = 1
+                torusShape.firstMaterial?.diffuse.contents = UIColor.white
+                let torus = SCNNode(geometry: torusShape)
+                //torus.eulerAngles = SCNVector3(Float(-90.0).degreestoRadians,0,0)
+                torus.position = SCNVector3(0,0,0)
+                torus.opacity = 0.8
+                self.GunduFieldNode.addChildNode(torus)
                 
                 
                 
@@ -178,6 +297,131 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     
     //MARK: - Function
+    
+    func showDummyPointer() {
+        
+        // ### Add Dummy Pointer for force direction ###
+                let gacoanDummyNode = SCNNode()
+                gacoanDummyNode.position = SCNVector3(0, 0.05, 0)
+//                gacoanNode.opacity = 0.1
+                                
+                self.gacoan.addChildNode(gacoanDummyNode)
+        
+                let pointerDummySphere = SCNSphere(radius: 0.02)
+                pointerDummySphere.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "gacoan-1")
+                let pointerDummyNode1 = SCNNode(geometry: pointerDummySphere)
+                pointerDummyNode1.opacity = 0.8
+                //        let z = [-0.05,-0.1,-0.15]
+                pointerDummyNode1.position = SCNVector3(0, 0, 0)
+                pointerDummyNode1.name = "pointerDummyNode1"
+                        
+                let pointerDummyNode2 = SCNNode(geometry: pointerDummySphere)
+                pointerDummyNode2.opacity = 0.65
+                        //        let z = [-0.05,-0.1,-0.15]
+                pointerDummyNode2.position = SCNVector3(0, 0, 0)
+                pointerDummyNode2.name = "pointerDummyNode2"
+                        
+                let pointerDummyNode3 = SCNNode(geometry: pointerDummySphere)
+                pointerDummyNode3.opacity = 0.5
+                        //        let z = [-0.05,-0.1,-0.15]
+                pointerDummyNode3.position = SCNVector3(0, 0, 0)
+                pointerDummyNode3.name = "pointerDummyNode3"
+                
+                //self.gacoan.position = SCNVector3(0,0,-0.1)
+                gacoanDummyNode.addChildNode(pointerDummyNode1)
+                gacoanDummyNode.addChildNode(pointerDummyNode2)
+                gacoanDummyNode.addChildNode(pointerDummyNode3)
+                
+                guard let currentFrame = self.sceneView.session.currentFrame else {return}
+                
+                let force = SCNVector4(0, 0, -5, 0)
+                // Convert the tranform to a SCNMatrix4
+                let transformR = SCNMatrix4(currentFrame.camera.transform)
+                // Convert the matrix to the nodes coordinate space
+                let localTransform = pointerDummyNode1.convertTransform(transformR, from: gacoanDummyNode)
+                let localTransform2 = pointerDummyNode2.convertTransform(transformR, from: gacoanDummyNode)
+                let localTransform3 = pointerDummyNode3.convertTransform(transformR, from: gacoanDummyNode)
+                
+                let rotatedForce = (localTransform * force).to3()
+                let rotatedForce2 = (localTransform2 * force).to3()
+                let rotatedForce3 = (localTransform3 * force).to3()
+                
+                pointerDummyNode1.position = SCNVector3(rotatedForce.x*0.05, gacoanDummyNode.position.y, -0.05)
+                pointerDummyNode2.position = SCNVector3(rotatedForce2.x*0.1, gacoanDummyNode.position.y, -0.1)
+                pointerDummyNode3.position = SCNVector3(rotatedForce3.x*0.15, gacoanDummyNode.position.y, -0.15)
+                
+                self.sceneView.scene.rootNode.enumerateChildNodes({ (node,_) in
+                    if node.name == "pointerDummyNode1" || node.name == "pointerDummyNode2" || node.name == "pointerDummyNode3" {
+                    node.removeFromParentNode()
+                    }
+                })
+                
+                gacoanDummyNode.addChildNode(pointerDummyNode1)
+                gacoanDummyNode.addChildNode(pointerDummyNode2)
+                gacoanDummyNode.addChildNode(pointerDummyNode3)
+                
+//                print(self.gacoan.position)
+//                print(gacoanDummyNode.position)
+//                print(pointerDummyNode1)
+//                print(pointerDummyNode2)
+//                print(pointerDummyNode3)
+        }
+    
+    private func setupMotionHandler() {
+      if (_motionManager.isAccelerometerAvailable) {
+        _motionManager.accelerometerUpdateInterval = 1/60.0
+
+        _motionManager.startDeviceMotionUpdates(to: OperationQueue.main, withHandler: {(data, error) in
+            //self.motionDidChange(data: data!)
+        })
+      }
+    }
+    
+    
+    
+    
+    func addGacoan() {
+        guard let currentFrame = self.sceneView.session.currentFrame else {return}
+
+        // Add Dummy Gacoan Position as sphereNodeGacoan
+        let sphere = SCNSphere(radius: 0.02)
+        sphere.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "gacoan-1")
+        let sphereNodeGacoan = SCNNode(geometry: sphere)
+        self.sceneView.scene.rootNode.addChildNode(sphereNodeGacoan)
+        sphereNodeGacoan.position = SCNVector3(0, 0, -0.05)
+        sphereNodeGacoan.name = "sphereNodeGacoan"
+        //
+        
+        // pinned/translate sphereNodeGacoan to camera view
+        let force = SCNVector4(0, 0, -5, 0)
+        let transformR = SCNMatrix4(currentFrame.camera.transform)
+        let localTransform = sphereNodeGacoan.convertTransform(transformR, from: sphereNodeGacoan)
+        let rotatedForce = (localTransform * force).to3()
+        // sphereNodeGacoan Dummy Position always on the floor (same with GunduField)
+        sphereNodeGacoan.position = SCNVector3(rotatedForce.x*0.05, GunduFieldNode.position.y, -0.05)
+            
+        //let self.gacoan = Gacoan()
+        self.gacoan.name = "gacoan"
+                        
+        //Add Collision
+        self.gacoan.physicsBody?.categoryBitMask = GamePhysicsBitmask.gacoan
+        // Remember collision use binary operator
+        self.gacoan.physicsBody?.collisionBitMask = GamePhysicsBitmask.plane | GamePhysicsBitmask.sasaran
+        self.gacoan.physicsBody?.contactTestBitMask = GamePhysicsBitmask.sasaran
+        
+        // Add Real Gacoan to the scene, remove all dummy GacoanNodeSphere and sphere at updateTime
+        self.gacoan.position = sphereNodeGacoan.position
+        self.sceneView.scene.rootNode.enumerateChildNodes({ (node,_) in
+                if node.name == "sphereNodeGacoan" || node.name == "sphereNode" {
+                node.removeFromParentNode()
+                }
+            })
+        self.sceneView.scene.rootNode.addChildNode(self.gacoan)
+        
+        //Change state gacoan added
+        self.isGacoanAdded = true
+        //print (self.sphereNode.position)
+        }
     
     func getUserVector() -> (SCNVector3, SCNVector3) { // (direction, position)
         if let frame = self.sceneView.session.currentFrame {
@@ -220,29 +464,80 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 //            translation.columns.3 = simd_float4(0, GunduFieldNode.position.y, 0, 1)      // x, y, z, HC
 //            gacoan.simdTransform = matrix_multiply(translation, camera.transform)
             
+            ///  ### Pakai ini nempel ke kamera ###
+//            guard let currentFrame = sceneView.session.currentFrame else {return}
+//            let camera = currentFrame.camera
+//            let transform = camera.transform
+//
+//
+//            var translation_matrix = matrix_identity_float4x4
+////            let cameraRelativePosition = SCNVector3(0,0,-0.1)
+//            //let cameraRelativePosition = self.GunduFieldNode.position
+//            //translation_matrix.columns.3.x = cameraRelativePosition.x
+//            //translation_matrix.columns.3.y = simd_float4(
+//            translation_matrix.columns.3.z = -0.1
+//            let modifiedMatrix = simd_mul(transform, translation_matrix)
+//            let sphere = SCNSphere(radius: 0.01)
+//            sphere.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "gacoan-1.png")
+//            let sphereNode = SCNNode(geometry: sphere)
+////            firstMaterial.diffuse.contents = UIColor.lightGray
+//            //firstMaterial?.diffuse.contents = UIColor.lightGray
+//            sphereNode.simdTransform = modifiedMatrix
+//            self.sceneView.scene.rootNode.addChildNode(sphereNode)
+            
+            
+            
+            //coba lagi pake ini
+//            let ballShape = SCNSphere(radius: 0.03)
+//            ballShape.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "gacoan-1.png")
+//            let ballNode = SCNNode(geometry: ballShape)
+//            ballNode.position = SCNVector3Make(0.0, GunduFieldNode.position.y , -0.4)
+//            let ballMatrix = ballNode.transform
+//            let cameraMatrix = sceneView.pointOfView!.transform
+//            let newBallMatrix = SCNMatrix4Mult(ballMatrix, cameraMatrix)
+//            ballNode.transform = newBallMatrix
+//            self.sceneView.scene.rootNode.addChildNode(ballNode)
+//            print(GunduFieldNode.position)
+//            print(ballNode.position)
+
+            
+            
+            ///  ### Pakai ini nempel ke kamera ###
+            
+            /// Coba core motion ###
+
+            
+            /// ####
+            
+//                        guard let pointOfView = self.sceneView.pointOfView else {return}
+//                        let transform = pointOfView.transform
+//                        let location = SCNVector3(transform.m41, transform.m42, transform.m43)
+//                        let orientation = SCNVector3(-transform.m31, -transform.m32, -transform.m33)
+//                        let position = location //+ orientation
+//
+//                        self.sceneView.scene.rootNode.addChildNode(gacoan)
+//                        gacoan.position = SCNVector3(position.x,GunduFieldNode.position.y,position.z - 0.5)
+            
             
             /// Pakai point of View
             
-            guard let pointOfView = self.sceneView.pointOfView else {return}
-            let transform = pointOfView.transform
-            let location = SCNVector3(transform.m41, transform.m42, transform.m43)
-            let orientation = SCNVector3(-transform.m31, -transform.m32, -transform.m33)
-            let position = location + orientation
-//            //  gacoan.makeUpdateCameraPos(towards: position)
-//            let action = SCNAction.move(to: SCNVector3(position.x,GunduFieldNode.position.y,position.y), duration: 0.0)
+//            guard let pointOfView = self.sceneView.pointOfView else {return}
+//            let transform = pointOfView.transform
+//            let location = SCNVector3(transform.m41, transform.m42, transform.m43)
+//            let orientation = SCNVector3(-transform.m31, -transform.m32, -transform.m33)
+//            let position = location + orientation
+//
+//            self.sceneView.scene.rootNode.addChildNode(gacoan)
+//            gacoan.position = SCNVector3(position.x,GunduFieldNode.position.y,position.z)
+////            gacoan.runAction(action)
 //
 //
-            self.sceneView.scene.rootNode.addChildNode(gacoan)
-            gacoan.position = SCNVector3(position.x,GunduFieldNode.position.y,position.z)
-//            gacoan.runAction(action)
-            
-            
-            print(GunduFieldNode.position)
-            print(gacoan.position) // kiri kanan pakai x,, atas bawah pakai y
+//            print(GunduFieldNode.position)
+//            print(gacoan.position) // kiri kanan pakai x,, atas bawah pakai y
             
             
             
-            //print(location)
+            //print(modifiedMatrix)
             //print(gacoan.position)
             
 ////            gacoan.runAction(SCNAction.repeatForever(action))
@@ -256,15 +551,15 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     
     func addSasaran() {
-                for i in 0...1 {
+                for i in 0...5 {
                     let sasaran = Sasaran()
 //                    let x = Double.random(in: -0.3...0.5)
 //                    let z = Double.random(in: -0.3...0.5)
 //                    sasaran.position = SCNVector3(x, 0, z)
                     
-                    let x = [0,0,0.4,0.4,0.4]
-                    let z = [-0.4,0.4,0,-0.4,0.4]
-                    sasaran.position = SCNVector3(x[i], 0, z[i])
+                    let x = [0, 0, -0.2, -0.2, 0.2, 0.2]
+                    let z = [-0.2, 0.2, -0.2, 0.2, -0.2, 0.2]
+                    sasaran.position = SCNVector3(Float(x[i]), 0, Float(z[i]))
                     //sasaran.simdScale = SIMD3(1*self.scaleRatio, 1*self.scaleRatio, 1*self.scaleRatio)
         //            // Add command code here into Donut()
                     //sasaran.physicsBody = SCNPhysicsBody(type: .static, shape: nil)
@@ -297,9 +592,47 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 self.sceneView.scene.rootNode.addChildNode(self.PlaneDetectTrue)
 
                 }
-            else if isGameOn  {
-//                print(isGameOn)
-                PlayGame()
+            else if (isGameOn && self.isGunduFieldAdded == true && self.isGacoanAdded == false)  {
+                
+                //PlayGame()
+                //let gacoan = Gacoan()
+//                guard let poV = self.sceneView.pointOfView else {return}
+//                let transform = poV.transform
+//                let orientation = SCNVector3Make(-1*transform.m31,-1*transform.m32, -1*transform.m33)
+//                let sphere = SCNSphere(radius: 0.1)
+//                sphere.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "2k_sun.png")
+ 
+                guard let currentFrame = self.sceneView.session.currentFrame else {return}
+                
+                let sphere = SCNSphere(radius: 0.02)
+                                sphere.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "gacoan-1")
+                                let sphereNode = SCNNode(geometry: sphere)
+                                
+                //                sphereNode.opacity = 0.5
+                                sphereNode.position = SCNVector3(0, 0, -1)
+                
+                var positionx = matrix_identity_float4x4
+                positionx.columns.3.z = -0.1
+                                    
+                sphereNode.simdTransform = matrix_multiply(currentFrame.camera.transform, positionx)
+                sphereNode.name = "sphereNode"
+
+                self.sceneView.scene.rootNode.addChildNode(sphereNode)
+                    //gacoanNode.addChildNode(sphereNode)
+                    
+                    self.sceneView.scene.rootNode.enumerateChildNodes({ (node,_) in
+                        if node.name == "sphereNode" {
+                        node.removeFromParentNode()
+                        }
+                    })
+                    
+                self.sceneView.scene.rootNode.addChildNode(sphereNode)
+//                print(GunduFieldNode.position)
+//                print(sphereNode.position)
+                
+                
+                
+                
 //                let hitTestResult = sceneView.hitTest(center, types: .existingPlaneUsingExtent).filter { (result) -> Bool in
 //                                    return (result.anchor as? ARPlaneAnchor)?.alignment == ARPlaneAnchor.Alignment.horizontal
 //                                }.last
@@ -314,6 +647,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 //                                self.sceneView.scene.rootNode.addChildNode(self.gacoan)
     
             }
+            else if (isGameOn && self.isGunduFieldAdded == true && self.isGacoanAdded == true) {
+               //print("show pointer")
+                //showDummyPointer()
+            }
+            
         }
     
     
@@ -365,9 +703,43 @@ func +(left: SCNVector3, right:SCNVector3) -> SCNVector3 {
     return SCNVector3Make(left.x + right.x, left.y + right.y, left.z + right.z)
 }
 
+func pointInFrontOfPoint(point: SCNVector3, direction: SCNVector3, distance: Float) -> SCNVector3 {
+    var x = Float()
+    var y = Float()
+    var z = Float()
+
+    x = point.x + distance * direction.x
+    y = point.y + distance * direction.y
+    z = point.z + distance * direction.z
+
+    let result = SCNVector3Make(x, y, z)
+    return result
+}
+
+func calculateCameraDirection(cameraNode: SCNNode) -> SCNVector3 {
+    let x = -cameraNode.rotation.x
+    let y = -cameraNode.rotation.y
+    let z = -cameraNode.rotation.z
+    let w = cameraNode.rotation.w
+    let cameraRotationMatrix = GLKMatrix3Make(cos(w) + pow(x, 2) * (1 - cos(w)),
+                                              x * y * (1 - cos(w)) - z * sin(w),
+                                              x * z * (1 - cos(w)) + y*sin(w),
+
+                                              y*x*(1-cos(w)) + z*sin(w),
+                                              cos(w) + pow(y, 2) * (1 - cos(w)),
+                                              y*z*(1-cos(w)) - x*sin(w),
+
+                                              z*x*(1 - cos(w)) - y*sin(w),
+                                              z*y*(1 - cos(w)) + x*sin(w),
+                                              cos(w) + pow(z, 2) * ( 1 - cos(w)))
+
+    let cameraDirection = GLKMatrix3MultiplyVector3(cameraRotationMatrix, GLKVector3Make(0.0, 0.0, -1.0))
+    return SCNVector3FromGLKVector3(cameraDirection)
+}
+
 //MARK: - Extension
 
-extension Int {
+extension Float {
     var degreestoRadians: Double {return Double(self) * .pi / 180 }
 }
 
@@ -387,5 +759,22 @@ extension ViewController: SCNPhysicsContactDelegate {
             }
 
         }
+    }
+}
+
+
+extension SCNMatrix4 {
+    static public func *(left: SCNMatrix4, right: SCNVector4) -> SCNVector4 {
+        let x = left.m11*right.x + left.m21*right.y + left.m31*right.z + left.m41*right.w
+        let y = left.m12*right.x + left.m22*right.y + left.m32*right.z + left.m42*right.w
+        let z = left.m13*right.x + left.m23*right.y + left.m33*right.z + left.m43*right.w
+        let w = left.m14*right.x + left.m24*right.y + left.m43*right.z + left.m44*right.w
+
+        return SCNVector4(x: x, y: y, z: z, w: w)
+    }
+}
+extension SCNVector4 {
+    public func to3() -> SCNVector3 {
+        return SCNVector3(self.x , self.y, self.z)
     }
 }
