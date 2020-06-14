@@ -13,4 +13,5 @@ struct GamePhysicsBitmask {
     static let gacoan = 1 << 1 // Return 1, 2^0
     static let plane = 1 << 2 // Return 2, 2^1
     static let sasaran = 1 << 3 // Return 4, 2^2
+    static let torus = 1 << 4 // Return 8, 2^3
 }

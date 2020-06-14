@@ -22,6 +22,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		573E4CA32496809700C25A58 /* collect.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = collect.mp3; sourceTree = "<group>"; };
 		57FEADFE248DD2E100DD4059 /* Gundula.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gundula.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		57FEAE01248DD2E100DD4059 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		57FEAE03248DD2E100DD4059 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -49,6 +50,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		573E4CA22496809700C25A58 /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				573E4CA32496809700C25A58 /* collect.mp3 */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
 		57FEADF5248DD2E100DD4059 = {
 			isa = PBXGroup;
 			children = (
@@ -68,6 +77,7 @@
 		57FEAE00248DD2E100DD4059 /* Gundula */ = {
 			isa = PBXGroup;
 			children = (
+				573E4CA22496809700C25A58 /* Audio */,
 				57FEAE01248DD2E100DD4059 /* AppDelegate.swift */,
 				57FEAE03248DD2E100DD4059 /* SceneDelegate.swift */,
 				57FEAE05248DD2E100DD4059 /* ViewController.swift */,

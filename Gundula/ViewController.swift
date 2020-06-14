@@ -10,7 +10,14 @@ import UIKit
 import ARKit
 //import RealityKit
 import CoreMotion
+import AVFoundation
 
+
+// config Collect
+ enum ParticleType: Int,CaseIterable{
+     case collect = 0
+     case walkDust
+ }
 
 class ViewController: UIViewController, ARSCNViewDelegate {
     
@@ -19,9 +26,24 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     let configuration = ARWorldTrackingConfiguration()
     
+    //Particles
+    private var particles = [SCNParticleSystem](repeating: SCNParticleSystem(), count: ParticleType.allCases.count)
+    
+    var particleEmitter: SCNNode!
+    
     ////  Config Touch Location
     var center: CGPoint!
     var positions = [SCNVector3]()
+    
+    private var userScore: Int = 0 {
+        didSet {
+            // ensure UI update runs on main thread
+            DispatchQueue.main.async {
+                //self.scoreLabel.text = String(self.userScore)
+            }
+        }
+    }
+ 
 
     
     // Config Element is added ?
@@ -83,10 +105,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         overlayCoachingView()
         center = view.center
         
+        setupParticle()
         
         
-        
-        
+        self.userScore = 0
 
         
     }
@@ -262,7 +284,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 //Add Collision
                 GunduFieldNode.physicsBody = SCNPhysicsBody(type: .static, shape: nil)
                 GunduFieldNode.physicsBody?.categoryBitMask = GamePhysicsBitmask.plane
-                GunduFieldNode.physicsBody?.collisionBitMask = GamePhysicsBitmask.gacoan
+                GunduFieldNode.physicsBody?.collisionBitMask = GamePhysicsBitmask.gacoan | GamePhysicsBitmask.sasaran
                 
                 self.sceneView.scene.rootNode.addChildNode(self.GunduFieldNode)
                 
@@ -297,6 +319,17 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     
     //MARK: - Function
+    
+    func setupParticle(){
+        //particles[ParticleType.collect.rawValue] = SCNParticleSystem.loadParticleSystems(atPath: "art.scnassets/Particles/collect.scnp").first!
+    }
+    
+    func collect(_ sasaran: Sasaran){
+        sasaran.runAction(SCNAction.playAudio(SCNAudioSource(fileNamed: "collect.mp3")!, waitForCompletion: true))
+        //sasaran.particleSystems.addpar
+        //sasaran.particleEmitter.addParticleSystem(particles[ParticleType.collect.rawValue])
+        //sasaran.childNode(withName: "sasaran", recursively: true)?.isHidden = true
+    }
     
     func showDummyPointer() {
         
@@ -403,11 +436,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         //let self.gacoan = Gacoan()
         self.gacoan.name = "gacoan"
                         
-        //Add Collision
+        //Add Bitmasks Collision
         self.gacoan.physicsBody?.categoryBitMask = GamePhysicsBitmask.gacoan
         // Remember collision use binary operator
         self.gacoan.physicsBody?.collisionBitMask = GamePhysicsBitmask.plane | GamePhysicsBitmask.sasaran
-        self.gacoan.physicsBody?.contactTestBitMask = GamePhysicsBitmask.sasaran
+        self.gacoan.physicsBody?.contactTestBitMask = GamePhysicsBitmask.sasaran | GamePhysicsBitmask.torus
         
         // Add Real Gacoan to the scene, remove all dummy GacoanNodeSphere and sphere at updateTime
         self.gacoan.position = sphereNodeGacoan.position
@@ -561,14 +594,18 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                     let z = [-0.2, 0.2, -0.2, 0.2, -0.2, 0.2]
                     sasaran.position = SCNVector3(Float(x[i]), 0, Float(z[i]))
                     //sasaran.simdScale = SIMD3(1*self.scaleRatio, 1*self.scaleRatio, 1*self.scaleRatio)
-        //            // Add command code here into Donut()
-                    //sasaran.physicsBody = SCNPhysicsBody(type: .static, shape: nil)
+                    // Add command code here into Donut()
+                    sasaran.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
                     //sasaran.physicsBody?.isAffectedByGravity = true
-        //            // Add Collision
-        //            donutNode.physicsBody?.categoryBitMask = GamePhysicsBitmask.donut
-        //            donutNode.physicsBody?.collisionBitMask = GamePhysicsBitmask.wolf
+                    // Add Collision
+                    sasaran.physicsBody?.categoryBitMask = GamePhysicsBitmask.sasaran
+                    sasaran.physicsBody?.collisionBitMask = GamePhysicsBitmask.gacoan | GamePhysicsBitmask.sasaran
+                    sasaran.physicsBody?.contactTestBitMask = GamePhysicsBitmask.sasaran | GamePhysicsBitmask.torus
                     
                     self.GunduFieldNode.addChildNode(sasaran)
+                    
+                    //particleEmitter = sasaran.rootNode.childNode(withName: "particleEmitter", recursively: true)!
+                    
                 }
             }
     
@@ -677,6 +714,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
       #if DEBUG
         self.sceneView.debugOptions = [ARSCNDebugOptions.showWorldOrigin,ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showCameras]
       #endif
+        sceneView.scene.physicsWorld.contactDelegate = self
     }
     
 
@@ -746,19 +784,83 @@ extension Float {
 
 extension ViewController: SCNPhysicsContactDelegate {
     func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
-        print("cek kontak")
-        if contact.nodeB.name == "GunduField" || contact.nodeB.name == "planeGunduField" {
-            print("kontak kah?")
-            self.planeIsTouched = true
-            if self.planeIsTouched == true {
-                print("kena plane")
-                }
-            else {
-                print("Out of bounds")
-                self.planeDetected.isHidden = false
-            }
-
+        print("** Collision!! " + contact.nodeA.name! + " hit " + contact.nodeB.name!)
+        
+        var contactNode:SCNNode!
+        
+        if (contact.nodeA.name == "gacoan" || contact.nodeB.name == "gacoan") {
+        // Contact Gacoan Terhadap Sasaran dan Torus
+        if contact.nodeA.name == "gacoan" {
+            contactNode = contact.nodeB
+        }else{
+            contactNode = contact.nodeA
         }
+        
+        // Jika Gacoan kena sasaran
+        if contactNode.physicsBody?.categoryBitMask == GamePhysicsBitmask.sasaran {
+        //contactNode.isHidden = true
+        
+        //play audio
+            //let sawSound = sounds["saw"]!
+            //ballNode.runAction(SCNAction.playAudio(sawSound, waitForCompletion: false))
+            
+            contactNode.runAction(SCNAction.playAudio(SCNAudioSource(fileNamed: "collect.mp3")!, waitForCompletion: true))
+        }
+        else if contactNode.physicsBody?.categoryBitMask == GamePhysicsBitmask.torus {
+            // Reset Game State back to gacoan ready to put on the field
+            //numberofcontact?
+            print("Reset Game State")
+        }
+        
+        }
+            
+        else if (contact.nodeA.name == "sasaran" || contact.nodeB.name == "sasaran") {
+            // Contact Sasaran Terhadap Sasaran lain dan juga Torus
+            if contact.nodeA.name == "sasaran" {
+                contactNode = contact.nodeB
+            } else {
+                contactNode = contact.nodeA
+            }
+            
+            // Jika Sasaran kena sasaran lain
+            if contactNode.physicsBody?.categoryBitMask == GamePhysicsBitmask.sasaran {
+            //contactNode.isHidden = true
+            
+            //play audio
+                //let sawSound = sounds["saw"]!
+                //ballNode.runAction(SCNAction.playAudio(sawSound, waitForCompletion: false))
+                
+                contactNode.runAction(SCNAction.playAudio(SCNAudioSource(fileNamed: "collect.mp3")!, waitForCompletion: true))
+            }
+            else if contactNode.physicsBody?.categoryBitMask == GamePhysicsBitmask.torus {
+                // Score + 1
+                print("Score + 1")
+                self.userScore += 1
+            }
+            
+            
+            }
+        
+        
+//        if let sasaran = contact.nodeB.parent as? Sasaran{
+//            collect(sasaran)
+//        }
+        
+        
+        
+//        print("cek kontak")
+//        if contact.nodeB.name == "GunduField" || contact.nodeB.name == "planeGunduField" {
+//            print("kontak kah?")
+//            self.planeIsTouched = true
+//            if self.planeIsTouched == true {
+//                print("kena plane")
+//                }
+//            else {
+//                print("Out of bounds")
+//                self.planeDetected.isHidden = false
+//            }
+//
+//        }
     }
 }
 
@@ -778,3 +880,5 @@ extension SCNVector4 {
         return SCNVector3(self.x , self.y, self.z)
     }
 }
+
+
