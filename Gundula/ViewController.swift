@@ -281,10 +281,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 //self.GunduFieldNode.scale = self.GunduFieldNodeDisable.scale
                 self.GunduFieldNodeDisable.removeFromParentNode()
                 
-                //Add Collision
-                GunduFieldNode.physicsBody = SCNPhysicsBody(type: .static, shape: nil)
-                GunduFieldNode.physicsBody?.categoryBitMask = GamePhysicsBitmask.plane
-                GunduFieldNode.physicsBody?.collisionBitMask = GamePhysicsBitmask.gacoan | GamePhysicsBitmask.sasaran
+//                //Add Collision
+//                GunduFieldNode.physicsBody = SCNPhysicsBody(type: .static, shape: nil)
+//                GunduFieldNode.physicsBody?.categoryBitMask = GamePhysicsBitmask.plane
+//                GunduFieldNode.physicsBody?.collisionBitMask = GamePhysicsBitmask.gacoan | GamePhysicsBitmask.sasaran
                 
                 self.sceneView.scene.rootNode.addChildNode(self.GunduFieldNode)
                 
@@ -436,11 +436,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         //let self.gacoan = Gacoan()
         self.gacoan.name = "gacoan"
                         
-        //Add Bitmasks Collision
-        self.gacoan.physicsBody?.categoryBitMask = GamePhysicsBitmask.gacoan
-        // Remember collision use binary operator
-        self.gacoan.physicsBody?.collisionBitMask = GamePhysicsBitmask.plane | GamePhysicsBitmask.sasaran
-        self.gacoan.physicsBody?.contactTestBitMask = GamePhysicsBitmask.sasaran | GamePhysicsBitmask.torus
+//        //Add Bitmasks Collision
+//        self.gacoan.physicsBody?.categoryBitMask = GamePhysicsBitmask.gacoan
+//        // Remember collision use binary operator
+//        self.gacoan.physicsBody?.collisionBitMask = GamePhysicsBitmask.plane | GamePhysicsBitmask.sasaran
+//        self.gacoan.physicsBody?.contactTestBitMask = GamePhysicsBitmask.sasaran | GamePhysicsBitmask.torus
         
         // Add Real Gacoan to the scene, remove all dummy GacoanNodeSphere and sphere at updateTime
         self.gacoan.position = sphereNodeGacoan.position
@@ -595,12 +595,12 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                     sasaran.position = SCNVector3(Float(x[i]), 0, Float(z[i]))
                     //sasaran.simdScale = SIMD3(1*self.scaleRatio, 1*self.scaleRatio, 1*self.scaleRatio)
                     // Add command code here into Donut()
-                    sasaran.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
+//                    sasaran.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
                     //sasaran.physicsBody?.isAffectedByGravity = true
                     // Add Collision
-                    sasaran.physicsBody?.categoryBitMask = GamePhysicsBitmask.sasaran
-                    sasaran.physicsBody?.collisionBitMask = GamePhysicsBitmask.gacoan | GamePhysicsBitmask.sasaran
-                    sasaran.physicsBody?.contactTestBitMask = GamePhysicsBitmask.sasaran | GamePhysicsBitmask.torus
+//                    sasaran.physicsBody?.categoryBitMask = GamePhysicsBitmask.sasaran
+//                    sasaran.physicsBody?.collisionBitMask = GamePhysicsBitmask.gacoan | GamePhysicsBitmask.sasaran
+//                    sasaran.physicsBody?.contactTestBitMask = GamePhysicsBitmask.sasaran | GamePhysicsBitmask.torus
                     
                     self.GunduFieldNode.addChildNode(sasaran)
                     
@@ -784,83 +784,68 @@ extension Float {
 
 extension ViewController: SCNPhysicsContactDelegate {
     func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
-        print("** Collision!! " + contact.nodeA.name! + " hit " + contact.nodeB.name!)
-        
-        var contactNode:SCNNode!
-        
-        if (contact.nodeA.name == "gacoan" || contact.nodeB.name == "gacoan") {
-        // Contact Gacoan Terhadap Sasaran dan Torus
-        if contact.nodeA.name == "gacoan" {
-            contactNode = contact.nodeB
-        }else{
-            contactNode = contact.nodeA
-        }
-        
-        // Jika Gacoan kena sasaran
-        if contactNode.physicsBody?.categoryBitMask == GamePhysicsBitmask.sasaran {
-        //contactNode.isHidden = true
-        
-        //play audio
-            //let sawSound = sounds["saw"]!
-            //ballNode.runAction(SCNAction.playAudio(sawSound, waitForCompletion: false))
-            
-            contactNode.runAction(SCNAction.playAudio(SCNAudioSource(fileNamed: "collect.mp3")!, waitForCompletion: true))
-        }
-        else if contactNode.physicsBody?.categoryBitMask == GamePhysicsBitmask.torus {
-            // Reset Game State back to gacoan ready to put on the field
-            //numberofcontact?
-            print("Reset Game State")
-        }
-        
-        }
-            
-        else if (contact.nodeA.name == "sasaran" || contact.nodeB.name == "sasaran") {
-            // Contact Sasaran Terhadap Sasaran lain dan juga Torus
-            if contact.nodeA.name == "sasaran" {
-                contactNode = contact.nodeB
-            } else {
-                contactNode = contact.nodeA
-            }
-            
-            // Jika Sasaran kena sasaran lain
-            if contactNode.physicsBody?.categoryBitMask == GamePhysicsBitmask.sasaran {
-            //contactNode.isHidden = true
-            
-            //play audio
-                //let sawSound = sounds["saw"]!
-                //ballNode.runAction(SCNAction.playAudio(sawSound, waitForCompletion: false))
-                
-                contactNode.runAction(SCNAction.playAudio(SCNAudioSource(fileNamed: "collect.mp3")!, waitForCompletion: true))
-            }
-            else if contactNode.physicsBody?.categoryBitMask == GamePhysicsBitmask.torus {
-                // Score + 1
-                print("Score + 1")
-                self.userScore += 1
-            }
-            
-            
-            }
-        
-        
-//        if let sasaran = contact.nodeB.parent as? Sasaran{
-//            collect(sasaran)
+//        print("** Collision!! " + contact.nodeA.name! + " hit " + contact.nodeB.name!)
+//
+//        var contactNode:SCNNode!
+//
+//        if (contact.nodeA.name == "gacoan" || contact.nodeB.name == "gacoan") {
+//        // Contact Gacoan Terhadap Sasaran dan Torus
+//        if contact.nodeA.name == "gacoan" {
+//            contactNode = contact.nodeB
+//        }else{
+//            contactNode = contact.nodeA
 //        }
-        
-        
-        
-//        print("cek kontak")
-//        if contact.nodeB.name == "GunduField" || contact.nodeB.name == "planeGunduField" {
-//            print("kontak kah?")
-//            self.planeIsTouched = true
-//            if self.planeIsTouched == true {
-//                print("kena plane")
-//                }
-//            else {
-//                print("Out of bounds")
-//                self.planeDetected.isHidden = false
-//            }
+//
+//        // Jika Gacoan kena sasaran
+//        if contactNode.physicsBody?.categoryBitMask == GamePhysicsBitmask.sasaran {
+//        //contactNode.isHidden = true
+//
+//        //play audio
+//            //let sawSound = sounds["saw"]!
+//            //ballNode.runAction(SCNAction.playAudio(sawSound, waitForCompletion: false))
+//
+//            contactNode.runAction(SCNAction.playAudio(SCNAudioSource(fileNamed: "collect.mp3")!, waitForCompletion: true))
+//        }
+//        else if contactNode.physicsBody?.categoryBitMask == GamePhysicsBitmask.torus {
+//            // Reset Game State back to gacoan ready to put on the field
+//            //numberofcontact?
+//            print("Reset Game State")
+//        }
 //
 //        }
+//
+//        else if (contact.nodeA.name == "sasaran" || contact.nodeB.name == "sasaran") {
+//            // Contact Sasaran Terhadap Sasaran lain dan juga Torus
+//            if contact.nodeA.name == "sasaran" {
+//                contactNode = contact.nodeB
+//            } else {
+//                contactNode = contact.nodeA
+//            }
+//
+//            // Jika Sasaran kena sasaran lain
+//            if contactNode.physicsBody?.categoryBitMask == GamePhysicsBitmask.sasaran {
+//            //contactNode.isHidden = true
+//
+//            //play audio
+//                //let sawSound = sounds["saw"]!
+//                //ballNode.runAction(SCNAction.playAudio(sawSound, waitForCompletion: false))
+//
+//                contactNode.runAction(SCNAction.playAudio(SCNAudioSource(fileNamed: "collect.mp3")!, waitForCompletion: true))
+//            }
+//            else if contactNode.physicsBody?.categoryBitMask == GamePhysicsBitmask.torus {
+//                // Score + 1
+//                print("Score + 1")
+//                self.userScore += 1
+//            }
+//
+//
+//            }
+//
+//
+////        if let sasaran = contact.nodeB.parent as? Sasaran{
+////            collect(sasaran)
+////        }
+        
     }
 }
 
