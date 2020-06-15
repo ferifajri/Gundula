@@ -16,6 +16,7 @@
 		57FEAE18248DDF5500DD4059 /* GunduField.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 57FEAE17248DDF5500DD4059 /* GunduField.scnassets */; };
 		A170CAC72492AA1600F931C6 /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A170CAC62492AA1600F931C6 /* CameraController.swift */; };
 		A170CAC92492ACAA00F931C6 /* AchievementController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A170CAC82492ACAA00F931C6 /* AchievementController.swift */; };
+		A170CACB2496A17D00F931C6 /* CustomController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A170CACA2496A17D00F931C6 /* CustomController.swift */; };
 		A17501252491608500C7930D /* WelcomeScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A17501242491608500C7930D /* WelcomeScreen.storyboard */; };
 		A175012724916DB700C7930D /* WelcomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A175012624916DB700C7930D /* WelcomeController.swift */; };
 /* End PBXBuildFile section */
@@ -32,6 +33,7 @@
 		57FEAE17248DDF5500DD4059 /* GunduField.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = GunduField.scnassets; sourceTree = "<group>"; };
 		A170CAC62492AA1600F931C6 /* CameraController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		A170CAC82492ACAA00F931C6 /* AchievementController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AchievementController.swift; sourceTree = "<group>"; };
+		A170CACA2496A17D00F931C6 /* CustomController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomController.swift; sourceTree = "<group>"; };
 		A17501242491608500C7930D /* WelcomeScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = WelcomeScreen.storyboard; sourceTree = "<group>"; };
 		A175012624916DB700C7930D /* WelcomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -78,6 +80,7 @@
 				A175012624916DB700C7930D /* WelcomeController.swift */,
 				A170CAC62492AA1600F931C6 /* CameraController.swift */,
 				A170CAC82492ACAA00F931C6 /* AchievementController.swift */,
+				A170CACA2496A17D00F931C6 /* CustomController.swift */,
 			);
 			path = Gundula;
 			sourceTree = "<group>";
@@ -159,6 +162,7 @@
 				57FEAE02248DD2E100DD4059 /* AppDelegate.swift in Sources */,
 				A175012724916DB700C7930D /* WelcomeController.swift in Sources */,
 				A170CAC92492ACAA00F931C6 /* AchievementController.swift in Sources */,
+				A170CACB2496A17D00F931C6 /* CustomController.swift in Sources */,
 				57FEAE04248DD2E100DD4059 /* SceneDelegate.swift in Sources */,
 				A170CAC72492AA1600F931C6 /* CameraController.swift in Sources */,
 			);

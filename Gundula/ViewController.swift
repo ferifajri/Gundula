@@ -105,7 +105,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-
+        
+        print(startTime)
+        if startTime == nil { return }
         let difference = Float(Date().timeIntervalSince(startTime!))
         self.power = self.power + difference
             

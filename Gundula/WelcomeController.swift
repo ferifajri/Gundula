@@ -13,6 +13,7 @@ class WelcomeController: UIViewController, ARSKViewDelegate {
     
     @IBOutlet weak var sceneView: ARSKView!
     @IBOutlet weak var achievementView: UIView!
+    @IBOutlet weak var customView: UIView!
     
     let cameraController = CameraController()
     
@@ -26,10 +27,12 @@ class WelcomeController: UIViewController, ARSKViewDelegate {
         
         // Do any additional setup after loading the view.
         // here we instantiate an object of gesture recognizer
-        let gestureRec = UITapGestureRecognizer(target: self, action:  #selector (self.achievementButton(sender:)))
+        let achievementRec = UITapGestureRecognizer(target: self, action:  #selector (self.achievementButton(sender:)))
         // here we add it to our custom view
-        self.achievementView.addGestureRecognizer(gestureRec)
+        self.achievementView.addGestureRecognizer(achievementRec)
         configureCameraController()
+        let customRec = UITapGestureRecognizer(target: self, action:  #selector (self.customButton(sender:)))
+        self.customView.addGestureRecognizer(customRec)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -45,6 +48,10 @@ class WelcomeController: UIViewController, ARSKViewDelegate {
     
     @objc func achievementButton(sender:UITapGestureRecognizer){
         performSegue(withIdentifier: "achievementSegue", sender: self)
+    }
+    
+    @objc func customButton(sender:UITapGestureRecognizer){
+        performSegue(withIdentifier: "customSegue", sender: self)
     }
     
     func configureCameraController() {
