@@ -23,7 +23,7 @@ class Gacoan: SCNNode {
     private func loadGacoan() {
         guard let gacoan = SCNScene(named: "art.scnassets/gacoan.scn")
         else {
-            fatalError("Wolf Scene is missing")
+            fatalError("gacoan Scene is missing")
         }
         
         self.gacoan.addChildNode(gacoan.rootNode)

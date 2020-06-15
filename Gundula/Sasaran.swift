@@ -14,8 +14,21 @@ class Sasaran: SCNNode {
     
     override init() {
         super.init()
-        loadSasaran()
-        addChildNode(sasaran)
+        //loadSasaran()
+        //addChildNode(sasaran)
+        
+        
+        let sasaranShape = SCNSphere(radius: 0.05)
+        sasaranShape.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "2k_sun")
+        let sasaran = SCNNode(geometry: sasaranShape)
+        
+        
+        sasaran.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
+
+        
+        self.sasaran.addChildNode(sasaran)
+        
+        
     }
     
     
@@ -35,3 +48,6 @@ class Sasaran: SCNNode {
         fatalError("init(coder:) has not been implemented")
     }
 }
+
+
+
