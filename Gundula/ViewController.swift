@@ -222,7 +222,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                     let force = simd_make_float4(original.x, original.y, original.z, 0)
                     let rotatedForce = simd_mul(currentFrame.camera.transform, force)
 
-                    let vectorForce = SCNVector3(x:rotatedForce.x, y:rotatedForce.y, z:rotatedForce.z)
+                    let vectorForce = SCNVector3(x:rotatedForce.x, y:rotatedForce.y, z: (rotatedForce.z * self.power))
                     gacoan.physicsBody?.applyForce(vectorForce, asImpulse: true)
                     
                     print(target)
@@ -281,7 +281,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 //self.GunduFieldNode.scale = self.GunduFieldNodeDisable.scale
                 self.GunduFieldNodeDisable.removeFromParentNode()
                 
-//                //Add Collision
+//                // Add Bitmasks Collision for GunduFieldNode
 //                GunduFieldNode.physicsBody = SCNPhysicsBody(type: .static, shape: nil)
                 GunduFieldNode.physicsBody?.categoryBitMask = GamePhysicsBitmask.plane
 //                GunduFieldNode.physicsBody?.collisionBitMask = GamePhysicsBitmask.gacoan | GamePhysicsBitmask.sasaran
@@ -296,6 +296,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 //                circle.position = SCNVector3(0,0,0)
 //                self.GunduFieldNode.addChildNode(circle)
                 
+                // Add Ring Torus
                 let torusShape = SCNTorus(ringRadius: 0.5, pipeRadius: 0.01)
                 //circlePlane.cornerRadius = 1
                 torusShape.firstMaterial?.diffuse.contents = UIColor.white
@@ -303,10 +304,13 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 //torus.eulerAngles = SCNVector3(Float(-90.0).degreestoRadians,0,0)
                 torus.position = SCNVector3(0,0,0)
                 torus.opacity = 0.8
-                self.GunduFieldNode.addChildNode(torus)
                 
-                GunduFieldNode.physicsBody?.categoryBitMask = GamePhysicsBitmask.torus
-                GunduFieldNode.physicsBody?.contactTestBitMask = GamePhysicsBitmask.gacoan | GamePhysicsBitmask.sasaran
+                
+                // Add Bitmasks Collision for Torus
+                torus.physicsBody?.categoryBitMask = GamePhysicsBitmask.torus
+                torus.physicsBody?.contactTestBitMask = GamePhysicsBitmask.gacoan | GamePhysicsBitmask.sasaran
+                
+                self.GunduFieldNode.addChildNode(torus)
                 
                 
                 
@@ -439,9 +443,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         //let self.gacoan = Gacoan()
         self.gacoan.name = "gacoan"
                         
-//        //Add Bitmasks Collision
+        //  Add Bitmasks Collision for Gacoan
         self.gacoan.physicsBody?.categoryBitMask = GamePhysicsBitmask.gacoan
-        // Remember collision use binary operator
         self.gacoan.physicsBody?.collisionBitMask = GamePhysicsBitmask.plane | GamePhysicsBitmask.sasaran
         self.gacoan.physicsBody?.contactTestBitMask = GamePhysicsBitmask.sasaran | GamePhysicsBitmask.torus
         
@@ -600,7 +603,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                     // Add command code here into Donut()
 //                    sasaran.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
                     //sasaran.physicsBody?.isAffectedByGravity = true
-                    // Add Collision
+                    // Add Bitmasks Collision for Sasaran
                     sasaran.physicsBody?.categoryBitMask = GamePhysicsBitmask.sasaran
                     sasaran.physicsBody?.collisionBitMask = GamePhysicsBitmask.gacoan | GamePhysicsBitmask.sasaran
                     sasaran.physicsBody?.contactTestBitMask = GamePhysicsBitmask.torus
@@ -808,6 +811,7 @@ extension ViewController: SCNPhysicsContactDelegate {
             //ballNode.runAction(SCNAction.playAudio(sawSound, waitForCompletion: false))
 
             contactNode.runAction(SCNAction.playAudio(SCNAudioSource(fileNamed: "art.scnassets/Audio/collect.mp3")!, waitForCompletion: true))
+            print("Kena Sasaran")
         }
         else if contactNode.physicsBody?.categoryBitMask == GamePhysicsBitmask.torus {
             // Reset Game State back to gacoan ready to put on the field
