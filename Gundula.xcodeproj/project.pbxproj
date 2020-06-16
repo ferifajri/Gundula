@@ -14,6 +14,11 @@
 		57FEAE0B248DD2E300DD4059 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 57FEAE0A248DD2E300DD4059 /* Assets.xcassets */; };
 		57FEAE0E248DD2E300DD4059 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 57FEAE0C248DD2E300DD4059 /* LaunchScreen.storyboard */; };
 		57FEAE18248DDF5500DD4059 /* GunduField.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 57FEAE17248DDF5500DD4059 /* GunduField.scnassets */; };
+		57FEAE5E2490C43200DD4059 /* ManualCreateFunduField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57FEAE5D2490C43200DD4059 /* ManualCreateFunduField.swift */; };
+		57FEAE602490C71100DD4059 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 57FEAE5F2490C71100DD4059 /* art.scnassets */; };
+		57FEAE6224914BA900DD4059 /* GamePhysicsBitmask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57FEAE6124914BA900DD4059 /* GamePhysicsBitmask.swift */; };
+		57FEAE642491567400DD4059 /* Gacoan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57FEAE632491567400DD4059 /* Gacoan.swift */; };
+		57FEAE6624917FAF00DD4059 /* Sasaran.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57FEAE6524917FAF00DD4059 /* Sasaran.swift */; };
 		A17501252491608500C7930D /* WelcomeScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A17501242491608500C7930D /* WelcomeScreen.storyboard */; };
 		A175012724916DB700C7930D /* WelcomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A175012624916DB700C7930D /* WelcomeController.swift */; };
 /* End PBXBuildFile section */
@@ -28,6 +33,11 @@
 		57FEAE0D248DD2E300DD4059 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		57FEAE0F248DD2E300DD4059 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		57FEAE17248DDF5500DD4059 /* GunduField.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = GunduField.scnassets; sourceTree = "<group>"; };
+		57FEAE5D2490C43200DD4059 /* ManualCreateFunduField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualCreateFunduField.swift; sourceTree = "<group>"; };
+		57FEAE5F2490C71100DD4059 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
+		57FEAE6124914BA900DD4059 /* GamePhysicsBitmask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamePhysicsBitmask.swift; sourceTree = "<group>"; };
+		57FEAE632491567400DD4059 /* Gacoan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gacoan.swift; sourceTree = "<group>"; };
+		57FEAE6524917FAF00DD4059 /* Sasaran.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sasaran.swift; sourceTree = "<group>"; };
 		A17501242491608500C7930D /* WelcomeScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = WelcomeScreen.storyboard; sourceTree = "<group>"; };
 		A175012624916DB700C7930D /* WelcomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -70,6 +80,11 @@
 				57FEAE0C248DD2E300DD4059 /* LaunchScreen.storyboard */,
 				57FEAE0F248DD2E300DD4059 /* Info.plist */,
 				57FEAE17248DDF5500DD4059 /* GunduField.scnassets */,
+				57FEAE5D2490C43200DD4059 /* ManualCreateFunduField.swift */,
+				57FEAE5F2490C71100DD4059 /* art.scnassets */,
+				57FEAE6124914BA900DD4059 /* GamePhysicsBitmask.swift */,
+				57FEAE632491567400DD4059 /* Gacoan.swift */,
+				57FEAE6524917FAF00DD4059 /* Sasaran.swift */,
 				A17501242491608500C7930D /* WelcomeScreen.storyboard */,
 				A175012624916DB700C7930D /* WelcomeController.swift */,
 			);
@@ -136,6 +151,7 @@
 			files = (
 				57FEAE0E248DD2E300DD4059 /* LaunchScreen.storyboard in Resources */,
 				57FEAE0B248DD2E300DD4059 /* Assets.xcassets in Resources */,
+				57FEAE602490C71100DD4059 /* art.scnassets in Resources */,
 				A17501252491608500C7930D /* WelcomeScreen.storyboard in Resources */,
 				57FEAE09248DD2E100DD4059 /* Main.storyboard in Resources */,
 				57FEAE18248DDF5500DD4059 /* GunduField.scnassets in Resources */,
@@ -149,10 +165,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				57FEAE642491567400DD4059 /* Gacoan.swift in Sources */,
 				57FEAE06248DD2E100DD4059 /* ViewController.swift in Sources */,
+				57FEAE6224914BA900DD4059 /* GamePhysicsBitmask.swift in Sources */,
 				57FEAE02248DD2E100DD4059 /* AppDelegate.swift in Sources */,
+				57FEAE6624917FAF00DD4059 /* Sasaran.swift in Sources */,
 				A175012724916DB700C7930D /* WelcomeController.swift in Sources */,
 				57FEAE04248DD2E100DD4059 /* SceneDelegate.swift in Sources */,
+				57FEAE5E2490C43200DD4059 /* ManualCreateFunduField.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
