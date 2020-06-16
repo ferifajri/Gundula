@@ -11,17 +11,35 @@ import ARKit
 //import RealityKit
 import CoreMotion
 
+// config Collect
+enum ParticleType: Int,CaseIterable{
+    case collect = 0
+    case walkDust
+}
 
-class ViewController: UIViewController, ARSCNViewDelegate {
+
+class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDelegate {
     
     @IBOutlet weak var planeDetected: UILabel!
     @IBOutlet weak var sceneView: ARSCNView!
     
     let configuration = ARWorldTrackingConfiguration()
     
+    //Particles
+    private var particles = [SCNParticleSystem](repeating: SCNParticleSystem(), count: ParticleType.allCases.count)
+    
     ////  Config Touch Location
     var center: CGPoint!
     var positions = [SCNVector3]()
+    
+    private var userScore: Int = 0 {
+        didSet {
+            // ensure UI update runs on main thread
+            DispatchQueue.main.async {
+                //self.scoreLabel.text = String(self.userScore)
+            }
+        }
+    }
 
     
     // Config Element is added ?
@@ -82,6 +100,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         runSession()
         overlayCoachingView()
         center = view.center
+        
+        setupParticle()
+        //addGunduField()
+        
+        self.userScore = 0
         
         
         
@@ -299,6 +322,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     
     //MARK: - Function
+    
+    func setupParticle(){
+        //particles[ParticleType.collect.rawValue] = SCNParticleSystem.loadParticleSystems(atPath: "art.scnassets/Particles/collect.scnp").first!
+    }
     
     func showDummyPointer() {
         
@@ -671,7 +698,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     func runSession() {
-      sceneView.delegate = self
+      
+        sceneView.delegate = self
+        sceneView.scene.physicsWorld.contactDelegate = self
+        
         //detects horizontal surfaces
       configuration.planeDetection = .horizontal
       configuration.isLightEstimationEnabled = true
@@ -679,6 +709,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
       #if DEBUG
         self.sceneView.debugOptions = [ARSCNDebugOptions.showWorldOrigin,ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showCameras]
       #endif
+        
+        
     }
     
 
@@ -746,22 +778,96 @@ extension Float {
 }
 
 
-extension ViewController: SCNPhysicsContactDelegate {
+extension ViewController {
     func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
-        print("cek kontak")
-        if contact.nodeB.name == "GunduField" || contact.nodeB.name == "planeGunduField" {
-            print("kontak kah?")
-            self.planeIsTouched = true
-            if self.planeIsTouched == true {
-                print("kena plane")
-                }
-            else {
-                print("Out of bounds")
-                self.planeDetected.isHidden = false
-            }
+    //        print("** Collision!! " + contact.nodeA.name! + " hit " + contact.nodeB.name!)
+    //
+            var contactNode:SCNNode!
+            //print("Mulai PContactDelegate")
 
-        }
+            if (contact.nodeA.name == "gacoan" || contact.nodeB.name == "gacoan") {
+                //print("salah satunya gacoan")
+                // Contact Gacoan Terhadap Sasaran dan Torus
+                if contact.nodeA.name == "gacoan" {
+                    contactNode = contact.nodeB
+                } else{
+                    contactNode = contact.nodeA
+                }
+                
+                // Jika Gacoan kena sasaran
+                if contactNode.physicsBody?.categoryBitMask == 4 {
+                //contactNode.isHidden = true
+
+                //play audio
+                    //let sawSound = sounds["saw"]!
+                    //ballNode.runAction(SCNAction.playAudio(sawSound, waitForCompletion: false))
+
+                    contactNode.runAction(SCNAction.playAudio(SCNAudioSource(fileNamed: "art.scnassets/Audio/collect.mp3")!, waitForCompletion: true))
+                    //print(" Node is Gacoan Kena Sasaran")
+                }
+                else if contactNode.physicsBody?.categoryBitMask == 8 {
+                    // Reset Game State back to gacoan ready to put on the field
+                    //numberofcontact?
+                    print("Node is Gacoan Reset Game State")
+                }
+
+            }
+//
+//        else if (contact.nodeA.name == "sasaran" || contact.nodeB.name == "sasaran") {
+//            // Contact Sasaran Terhadap Sasaran lain dan juga Torus
+//            if contact.nodeA.name == "sasaran" {
+//                contactNode = contact.nodeB
+//            } else {
+//                contactNode = contact.nodeA
+//            }
+//
+//            // Jika Sasaran kena sasaran lain
+//            if contactNode.physicsBody?.categoryBitMask == GamePhysicsBitmask.sasaran {
+//            //contactNode.isHidden = true
+//
+//            //play audio
+//                //let sawSound = sounds["saw"]!
+//                //ballNode.runAction(SCNAction.playAudio(sawSound, waitForCompletion: false))
+//
+//                contactNode.runAction(SCNAction.playAudio(SCNAudioSource(fileNamed: "collect.mp3")!, waitForCompletion: true))
+//            }
+//            else if contactNode.physicsBody?.categoryBitMask == GamePhysicsBitmask.torus {
+//                // Score + 1
+//                print("Score + 1")
+//                self.userScore += 1
+//            }
+//
+//
+//            }
+//
+//
+////        if let sasaran = contact.nodeB.parent as? Sasaran{
+////            collect(sasaran)
+////        }
+        
     }
+
+//    func physicsWorld(_ world: SCNPhysicsWorld, didEnd contact: SCNPhysicsContact) {
+//        var contactEndNode:SCNNode!
+//
+//        if (contact.nodeA.name == "gacoan" || contact.nodeB.name == "gacoan") {
+//        print("salah satunya gacoan")
+//        // Contact Gacoan Terhadap Sasaran dan Torus
+//        if contact.nodeA.name == "gacoan" {
+//            contactEndNode = contact.nodeB
+//        } else{
+//            contactEndNode = contact.nodeA
+//        }
+//    }
+//
+//        if contactEndNode.physicsBody?.categoryBitMask == 8 {
+//            print("End Contact With Torus")
+//            }
+//        else {
+//        }
+//
+//        }
+
 }
 
 
