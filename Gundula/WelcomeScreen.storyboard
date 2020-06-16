@@ -180,9 +180,12 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <state key="normal" image="phone" catalog="system"/>
+                                        <color key="tintColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </button>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="ball1" translatesAutoresizingMaskIntoConstraints="NO" id="Dmb-0g-cBe">
+                                        <rect key="frame" x="134" y="34" width="115" height="86"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="2sr-hy-XOP" firstAttribute="top" secondItem="9E8-V4-uMD" secondAttribute="top" id="8n1-7q-dXc"/>
@@ -193,13 +196,19 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fZK-Va-cAz">
                                 <rect key="frame" x="154" y="370" width="240" height="199"/>
                                 <subviews>
-                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eQc-H1-XGq">
-                                        <rect key="frame" x="131" y="116" width="49" height="31"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="onTintColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    </switch>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="player2" translatesAutoresizingMaskIntoConstraints="NO" id="Aqg-v0-6kn">
                                         <rect key="frame" x="0.0" y="0.0" width="240" height="199"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="scaleAspectFill" fixedFrame="YES" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PnU-UA-Qhd">
+                                        <rect key="frame" x="129" y="111" width="57" height="59"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                        <color key="tintColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </button>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="ball3" translatesAutoresizingMaskIntoConstraints="NO" id="U8i-AP-Z4K">
+                                        <rect key="frame" x="0.0" y="42" width="92" height="86"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                 </subviews>
@@ -225,8 +234,10 @@
                         <viewLayoutGuide key="safeArea" id="hqb-fO-UC6"/>
                     </view>
                     <connections>
+                        <outlet property="ballOne" destination="Dmb-0g-cBe" id="GZn-hZ-v8k"/>
+                        <outlet property="ballTwo" destination="U8i-AP-Z4K" id="t3v-dm-O6i"/>
                         <outlet property="playerOne" destination="XDG-wz-MJg" id="tEt-jY-Yuq"/>
-                        <outlet property="playerTwo" destination="eQc-H1-XGq" id="O7f-Zr-gnw"/>
+                        <outlet property="playerTwo" destination="PnU-UA-Qhd" id="UOP-Bq-ypy"/>
                         <outlet property="totalView" destination="CcG-Ke-sQK" id="yd6-21-iCC"/>
                     </connections>
                 </viewController>
@@ -475,6 +486,8 @@
     </scenes>
     <resources>
         <image name="arrow.right" catalog="system" width="64" height="48"/>
+        <image name="ball1" width="106" height="109"/>
+        <image name="ball3" width="138" height="135"/>
         <image name="brush" width="512" height="512"/>
         <image name="canyon" width="300" height="300"/>
         <image name="fireball2" width="373" height="353"/>
@@ -482,7 +495,6 @@
         <image name="gundula" width="330" height="54"/>
         <image name="hole" width="300" height="300"/>
         <image name="park" width="601" height="600"/>
-        <image name="phone" catalog="system" width="64" height="56"/>
         <image name="player1" width="334" height="194"/>
         <image name="player2" width="328" height="199"/>
         <image name="rose" width="600" height="600"/>
